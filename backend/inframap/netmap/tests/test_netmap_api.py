@@ -79,6 +79,21 @@ class NetworkMapAPITests(TestCase):
 
     def test_partial_update(self):
         """"""
+        netmap = create_netmap(
+            user=self.user,
+            name="Test Map",
+            description="Test Map Description"
+        )
 
+        payload = {
+            'name': 'New Map'
+        }
 
+        url = detail_url(netmap.id)
 
+        res = self.client.patch(url, payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        netmap.refresh_from_db()
+        self.assertEqual(netmap.name, payload['name'])
+        self.assertEqual(netmap.user, self.user)
+        self.assertEqual(netmap.description, "Test Map Description")
