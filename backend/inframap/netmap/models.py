@@ -73,9 +73,9 @@ class CloudPool(models.Model):
 
     name = models.CharField(max_length=255)
     region = models.CharField(max_length=50)
-    openstack = models.OneToOneField(OpenStack, on_delete=models.CASCADE)
-    network = models.OneToOneField(Networking, on_delete=models.CASCADE)
-    kubernetes = models.OneToOneField(Kubernetes, on_delete=models.CASCADE)
+    openstack = models.OneToOneField(OpenStack, on_delete=models.CASCADE, null=True)
+    network = models.OneToOneField(Networking, on_delete=models.CASCADE, null=True)
+    kubernetes = models.OneToOneField(Kubernetes, on_delete=models.CASCADE, null=True)
 
 
 class NetworkMap(models.Model):

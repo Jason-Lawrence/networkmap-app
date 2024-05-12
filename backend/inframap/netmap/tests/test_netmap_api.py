@@ -5,8 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from .. import models
-from .. import serializers
+from .. import models, serializers
 
 
 NETWORK_URL = reverse('netmap:networkmap-list')

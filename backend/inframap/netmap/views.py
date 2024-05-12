@@ -58,7 +58,6 @@ class NetworkMapViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-
 @extend_schema_view(
     list=extend_schema(
         parameters=[
@@ -90,3 +89,16 @@ class CloudPoolViewSet(BaseNetworkMapAttrViewSet):
     """"""
     serializer_class = serializers.CloudPoolSerializer
     queryset = models.CloudPool.objects.all()
+
+
+class OpenStackViewSet(viewsets.ModelViewSet):
+
+    serializer_class = serializers.OpenStackSerializer
+    queryset = models.OpenStack.objects.none()
+
+    def get_queryset(self):
+        cloudpool_id = self.request.query_params.get('cloudpool_id')
+        if cloudpool_id:
+            self.queryset = models.OpenStack.objects.filter(cloud_pool_id=cloudpool_id)
+
+        return self.queryset

@@ -6,6 +6,7 @@ from . import views
 router = DefaultRouter()
 router.register('netmap', views.NetworkMapViewSet)
 router.register('cloudpools', views.CloudPoolViewSet)
+router.register('openstack', views.OpenStackViewSet)
 
 # print(
 #     f"""#########################################
