@@ -83,5 +83,5 @@ class NetworkMap(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
-    cloud_pools = models.ManyToManyField(CloudPool)
+    cloudpools = models.ManyToManyField(CloudPool)
 

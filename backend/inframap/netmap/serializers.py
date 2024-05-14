@@ -3,6 +3,22 @@ from rest_framework import serializers
 from . import models
 
 
+class NetworkingSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        models = models.Networking
+        fields = ['id']
+        read_only_fields = ['id']
+
+
+class KubernetesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Kubernetes
+        fields = ['id']
+        read_only_fields = ['id']
+
+
 class OpenStackSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -28,11 +44,11 @@ class NetworkingSerializer(serializers.ModelSerializer):
 
 class NetworkMapSerializer(serializers.ModelSerializer):
 
-    cloud_pools = CloudPoolSerializer(many=True, required=False)
+    cloudpools = CloudPoolSerializer(many=True, required=False)
 
     class Meta:
         model = models.NetworkMap
-        fields = ['id', 'name', 'cloud_pools']
+        fields = ['id', 'name', 'cloudpools']
         read_only_fields = ['id']
 
 
@@ -41,11 +57,11 @@ class NetworkMapSerializer(serializers.ModelSerializer):
         # user = self.context['request'].user
         for pool in pools:
             pool_obj, created = models.CloudPool.objects.get_or_create(**pool)
-            netmap.cloud_pools.add(pool_obj)
+            netmap.cloudpools.add(pool_obj)
 
     def create(self, validated_data):
         """Creates a Network Map"""
-        cloud_pools = validated_data.pop('cloud_pools', [])
+        cloud_pools = validated_data.pop('cloudpools', [])
         netmap = models.NetworkMap.objects.create(**validated_data)
         self._get_or_create_cloud_pools(cloud_pools, netmap)
 
@@ -53,7 +69,7 @@ class NetworkMapSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         """Update a Network Map"""
-        cloud_pools = validated_data.pop('cloud_pools', None)
+        cloud_pools = validated_data.pop('cloudpools', None)
         if cloud_pools is not None:
             instance.cloud_pools.clear()
             self._get_or_create_cloud_pools(cloud_pools, instance)

@@ -20,9 +20,9 @@ from . import models, serializers
     list=extend_schema(
         parameters=[
             OpenApiParameter(
-                'cloud_pools',
+                'cloudpools',
                 OpenApiTypes.STR,
-                description='Comma separated list of cloud_pool_ids to filter'
+                description='Comma separated list of cloudpool_ids to filter'
             ),
         ]
     )
@@ -38,11 +38,11 @@ class NetworkMapViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """"""
-        cloud_pools = self.request.query_params.get('cloud_pools')
+        cloudpools = self.request.query_params.get('cloudpools')
         queryset = self.queryset
-        if cloud_pools:
-            cloud_pool_ids = self._params_to_ints(cloud_pools)
-            queryset = queryset.filter(cloud_pools__id__in=cloud_pool_ids)
+        if cloudpools:
+            cloudpool_ids = self._params_to_ints(cloudpools)
+            queryset = queryset.filter(cloudpools__id__in=cloudpool_ids)
 
         return queryset.order_by('-id').distinct()
 
@@ -100,5 +100,18 @@ class OpenStackViewSet(viewsets.ModelViewSet):
         cloudpool_id = self.request.query_params.get('cloudpool_id')
         if cloudpool_id:
             self.queryset = models.OpenStack.objects.filter(cloud_pool_id=cloudpool_id)
+
+        return self.queryset
+
+
+class KubernetesViewSet(viewsets.ModelViewSet):
+
+    serializer_class = serializers.KubernetesSerializer
+    queryset = models.Kubernetes.objects.none()
+
+    def get_queryset(self):
+        cloudpool_id = self.request.query_params.get('cloudpool_id')
+        if cloudpool_id:
+            self.queryset = models.Kubernetes.objects.filter(cloud_pool_id=cloudpool_id)
 
         return self.queryset

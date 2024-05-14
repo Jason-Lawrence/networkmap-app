@@ -96,3 +96,25 @@ class NetworkMapAPITests(TestCase):
         self.assertEqual(netmap.name, payload['name'])
         self.assertEqual(netmap.user, self.user)
         self.assertEqual(netmap.description, "Test Map Description")
+
+    def test_create_netmap_with_new_cloudpools(self):
+        payload = {
+            'name': 'test map',
+            'description': "Test Map",
+            'cloudpools':[
+                {'name': 'test_pool', 'region': 'test-1'},
+                {'name': 'fake_pool', 'region': 'fake-1'}
+            ]
+        }
+        res = self.client.post(NETWORK_URL, payload, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        netmaps = models.NetworkMap.objects.all()
+        self.assertEqual(netmaps.count(), 1)
+        netmap = netmaps[0]
+        self.assertEqual(netmap.cloudpools.count(), 2)
+        for pool in payload['cloudpools']:
+            exists = netmap.cloudpools.filter(
+                name=pool['name'],
+                region=pool['region']
+            ).exists()
+            self.assertTrue(exists)
