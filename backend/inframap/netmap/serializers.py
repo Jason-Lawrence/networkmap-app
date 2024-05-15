@@ -3,44 +3,13 @@ from rest_framework import serializers
 from . import models
 
 
-class NetworkingSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        models = models.Networking
-        fields = ['id']
-        read_only_fields = ['id']
-
-
-class KubernetesSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Kubernetes
-        fields = ['id']
-        read_only_fields = ['id']
-
-
-class OpenStackSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.OpenStack
-        fields = ['id']
-        read_only_fields = ['id']
-
-
 class CloudPoolSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CloudPool
         fields = ['id', 'name', 'region']
         read_only_fields = ['id']
-
-
-class NetworkingSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = models.Networking
-        fields = ['id']
-
+        
 
 class NetworkMapSerializer(serializers.ModelSerializer):
 

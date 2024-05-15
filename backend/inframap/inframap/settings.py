@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'core',
-    'netmap'
+    'netmap',
+    'schema_graph'
 ]
 
 MIDDLEWARE = [

@@ -1,87 +1,50 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class Protocol(models.Model):
-
     port = models.IntegerField()
     protocol = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.protocol}  {self.port}"
-
+        return f"{self.protocol} {self.port}"
 
 class Device(models.Model):
-
     device_type = models.CharField(max_length=100)
     hostname = models.CharField(max_length=100)
     in_band_ip = models.GenericIPAddressField()
     out_of_band_ip = models.GenericIPAddressField()
+    manufacturer = models.CharField(max_length=50)
+    model = models.CharField(max_length=25)
     extra = models.JSONField(blank=True, null=True)
     protocols = models.ManyToManyField(Protocol)
 
     def __str__(self):
         return self.hostname
 
-
-class Infrastructure(models.Model):
-
-    class Meta:
-        abstract = True
-
-    def to_cytoscape(self):
-        pass
-
-class OpenStack(Infrastructure):
-
-    def to_cytoscape(self):
-        pass
-
-    def __str__(self):
-        return f"I dont know"
-
-
 class OpenStackDevice(Device):
-
     service = models.CharField(max_length=20)
-    infrastructure = models.ForeignKey(OpenStack, on_delete=models.CASCADE)
-
-
-class Kubernetes(Infrastructure):
-
-    def to_cytoscape(self):
-        pass
-
+    cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='openstack_devices')
 
 class KubernetesDevice(Device):
-
-    infrastructure = models.ForeignKey(Kubernetes, on_delete=models.CASCADE)
-
-
-class Networking(Infrastructure):
-
-    def to_cytoscape(self):
-        pass
-
+    cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='kubernetes_devices')
 
 class NetworkDevice(Device):
-
     public_ip = models.GenericIPAddressField()
-    infrastructure = models.ForeignKey(Networking, on_delete=models.CASCADE)
+    cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='network_devices')
 
 class CloudPool(models.Model):
-
     name = models.CharField(max_length=255)
     region = models.CharField(max_length=50)
-    openstack = models.OneToOneField(OpenStack, on_delete=models.CASCADE, null=True)
-    network = models.OneToOneField(Networking, on_delete=models.CASCADE, null=True)
-    kubernetes = models.OneToOneField(Kubernetes, on_delete=models.CASCADE, null=True)
+    # Devices will be linked through the device models' foreign keys
 
+    def __str__(self):
+        return self.name
 
 class NetworkMap(models.Model):
-
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     cloudpools = models.ManyToManyField(CloudPool)
 
+    def __str__(self):
+        return self.name
