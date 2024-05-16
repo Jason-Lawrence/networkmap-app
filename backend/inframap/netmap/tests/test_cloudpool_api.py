@@ -44,5 +44,19 @@ class CloudPoolAPITests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         pools = models.CloudPool.objects.all()
         self.assertFalse(pools.exists())
-
+        
+    def test_create_cloudpool(self):
+        """Test Create Cloud Pool."""
+        payload = {
+            'name': 'test pool',
+            'region': 'test-1'
+        }
+        res = self.client.post(CLOUDPOOL_URL, payload)
+        
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        cloudpool = models.CloudPool.objects.get(id=res.data['id'])
+        
+        for k, v in payload.items():
+            self.assertEqual(getattr(cloudpool, k), v)
+            
     

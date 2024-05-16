@@ -85,7 +85,16 @@ class BaseNetworkMapAttrViewSet(mixins.UpdateModelMixin,
         return queryset.order_by('-name').distinct()
 
 
-class CloudPoolViewSet(BaseNetworkMapAttrViewSet):
+class CloudPoolViewSet(viewsets.ModelViewSet):
     """"""
     serializer_class = serializers.CloudPoolSerializer
     queryset = models.CloudPool.objects.all()
+    
+    def get_queryset(self):
+        """"""
+        return self.queryset
+    
+    def perform_create(self, serializer):
+        """"""
+        serializer.save()
+        
