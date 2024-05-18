@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Cloudpool } from './cloudpool/cloudpool.model';
+
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class NetMapAPIService {
 
   constructor(private http: HttpClient) { }
 
-  createNetworkMap(name: string, cloudpools: Cloudpool[], description: string): Observable<any> {
+  createNetworkMap(name: string, cloudpools: [], description: string): Observable<any> {
     /**
      * Send a Post request to create a Network Map
      * 
