@@ -1,0 +1,15 @@
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn btn-success" (click)="createNetworkMap()">New NetworkMap</button>
+    </div>  
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <app-network-map-item 
+        *ngFor="let netmap of network_maps; let i = index"
+        [networkMap]="netmap"
+        [index]="i">
+        </app-network-map-item>
+    </div>
+</div>        
+    

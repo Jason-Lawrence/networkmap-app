@@ -1,20 +1,8 @@
 <div class="row">
-    <div class="col-xs-12">
-        <button class="btn btn-success">New NetworkMap</button>
+    <div class="col-md-5">
+        <app-network-maps-list></app-network-maps-list>
+    </div>
+    <div class="col-md-7">
+        <router-outlet></router-outlet>
     </div>
 </div>
-<hr>
-<div class="row">
-    <div class="col-xs-12">
-        <a 
-        href="#" 
-        class="list-group-item clearfix"
-        *ngFor="let netmap of network_maps">
-        <div class="pull-left">
-            <h4 class="list-group-item-heading">{{ netmap.name }}</h4>
-            <p class="list-group-item-text">{{ netmap.description }}</p>
-        </div>
-        </a>
-    </div>
-</div>
-

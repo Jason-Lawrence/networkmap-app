@@ -1,7 +1,5 @@
-import { CloudPool } from "./network-map/cloudpools/cloudpool.model";
-
 export interface NetworkMap {
+    id: number;
     name: string;
     description: string;
-    cloudpools: CloudPool[];
 }

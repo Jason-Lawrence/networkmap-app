@@ -102,6 +102,7 @@ class CloudPool(models.Model):
     """
     name = models.CharField(max_length=255)
     region = models.CharField(max_length=50)
+    description = models.CharField(max_length=255)
     # Devices will be linked through the device models' foreign keys
 
     def __str__(self):

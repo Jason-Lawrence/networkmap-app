@@ -1,0 +1,48 @@
+{
+    "RootComponent":{
+        "responsibility": "hold all components",
+        "HeaderComponent": {
+            "responsibility":"Navigation"
+        },
+        "NetworkMapsComponent":{
+            "responsibility": "Track all of the network maps",
+            "functions":{
+                "Select": "Select existing network map",
+                "Create": "Create a new Network Map"
+            },
+
+            "NetworkMapComponent":{
+                "responsibility": "Hold Details of a Network Map",
+                "GetNetworkMapDetailsFunction":"Send Get request to backend for the network map.",
+                "GetCytoscapeData": "Send Get request to backend for the data",
+                "GraphComponent": {
+                    "responsibility":"Render Cytoscape Graph FOr the Network Map"
+                },
+                "CloudPoolsComponent":{
+                    "responsibility": "Track CloudPools associated with a Network Map",
+                    "CloudPoolComponent":{
+                        "responsibility": "Hold Details of a CloudPool",
+                        "OpenstackDevicesComponent":{
+                            "responsibility":"track openstack devices associated with the cloudpool",
+                            "OpenStackDeviceComponent":{
+                                "responsibility": "Hold details of a Openstack device"
+                            }
+                        },
+                        "NetworkDevicesComponent": {
+                            "responsibility": "Track Networking devices associated with the cloudpool",
+                            "NetworkDeviceComponent": {
+                                "responsibility": "Hold details of a network device"
+                            }
+                        },
+                        "KubernetesDevicesComponent": {
+                            "responsibility": "Track Kubernetes devices associated with the cloudpool",
+                            "KubernetesDeviceComponent":{
+                                "responsibility": "Hold details of a Kubernetes device"
+                            } 
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

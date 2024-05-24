@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NetworkMap } from '../network-map.model';
+import { NetworkMapsService } from '../networkmap.service';
 
 @Component({
   selector: 'app-graph',
@@ -6,5 +8,6 @@ import { Component } from '@angular/core';
   styleUrl: './graph.component.css'
 })
 export class GraphComponent {
-
+ netmap: NetworkMap;
+ 
 }
