@@ -7,7 +7,7 @@ class CloudPoolSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CloudPool
-        fields = ['id', 'name', 'region']
+        fields = ['id', 'name', 'region', 'description']
         read_only_fields = ['id']
         
     def create(self, validated_data):
@@ -25,19 +25,21 @@ class CloudPoolSerializer(serializers.ModelSerializer):
 
 class NetworkMapSerializer(serializers.ModelSerializer):
 
-    cloudpools = CloudPoolSerializer(many=True, required=False)
 
     class Meta:
         model = models.NetworkMap
-        fields = ['id', 'name', 'cloudpools']
+        fields = ['id', 'name', 'description']
         read_only_fields = ['id']
 
 
     def _get_or_create_cloud_pools(self, pools, netmap):
         """Handle getting or creating pools as needed."""
-        # user = self.context['request'].user
+        user = self.context['request'].user
         for pool in pools:
-            pool_obj, created = models.CloudPool.objects.get_or_create(**pool)
+            pool_obj, created = models.CloudPool.objects.get_or_create(
+                user=user,
+                **pool
+            )
             netmap.cloudpools.add(pool_obj)
 
     def create(self, validated_data):
@@ -64,5 +66,14 @@ class NetworkMapSerializer(serializers.ModelSerializer):
 
 class NetworkMapDetailSerializer(NetworkMapSerializer):
     """Serializer for NetMap detail view."""
+    
+    cloudpools = CloudPoolSerializer(many=True, required=False)
+    
     class Meta(NetworkMapSerializer.Meta):
-        fields  = NetworkMapSerializer.Meta.fields + ['description']
+        fields = NetworkMapSerializer.Meta.fields + ['cloudpools', 'is_public', 'is_editable']
+        
+
+class CloudPoolDetailSerializer(CloudPoolSerializer):
+    
+    class Meta(CloudPoolSerializer.Meta):
+        fields = CloudPoolSerializer.Meta.fields + ['is_base_model', 'is_public', 'is_editable']

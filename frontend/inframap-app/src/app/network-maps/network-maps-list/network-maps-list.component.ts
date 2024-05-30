@@ -17,14 +17,9 @@ export class NetworkMapsListComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    //this.network_maps = this.netmapService.getNetworkMaps();
-    this.netmapService.retrieveNetworkMaps().subscribe(
-      (netmaps :NetworkMap[]) => {
-        console.log(netmaps)
-        this.network_maps = netmaps
-      }
-    );
+    this.network_maps = this.netmapService.getNetworkMaps()
   }
+  
   createNetworkMap(){
     this.router.navigate(['new'], {relativeTo: this.route})
   }

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Protocol(models.Model):
     """
@@ -100,9 +100,14 @@ class CloudPool(models.Model):
     :param region: The region Identifier for the Cloud Pool.
     :type region: str.
     """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     region = models.CharField(max_length=50)
     description = models.CharField(max_length=255)
+    is_base_model = models.BooleanField(default=False)
+    is_public = models.BooleanField(default=False)
+    is_editable = models.BooleanField(default=False)
+    
     # Devices will be linked through the device models' foreign keys
 
     def __str__(self):
@@ -110,10 +115,24 @@ class CloudPool(models.Model):
 
 
 class NetworkMap(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    """_summary_
+
+    :param user: The User who created the Network Map
+    :type user: django.contrib.auth.models.User_
+    :param name: The name of the Network Map.
+    :type name: str.
+    :param description: The description of the Network Map.
+    :type description: str.
+    :param cloudpools: The cloud pools available to this Network Map.
+    :type cloudpools: CloudPool[]
+    """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     cloudpools = models.ManyToManyField(CloudPool)
+    is_public = models.BooleanField(default=False)
+    is_editable = models.BooleanField(default=False)
+    
 
     def __str__(self):
         return self.name

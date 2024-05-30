@@ -9,16 +9,21 @@ import { ErrorPageComponent } from "./error-page/error-page.component";
 import { NetworkMapEditComponent } from "./network-maps/network-map-edit/network-map-edit.component";
 import { GraphComponent } from "./network-maps/graph/graph.component";
 import { NetworkMapDetailsComponent } from "./network-maps/network-map-details/network-map-details.component";
+import { LoginComponent } from "./auth/login/login.component";
+import { RegisterComponent } from "./auth/register/register.component";
+import { AuthGuard } from "./auth/auth.guard";
 
 const appRoutes: Routes = [
   { path: '', component:  HomeComponent},
-  { path: 'networkmaps', component: NetworkMapsComponent, children: [
+  { path: 'networkmaps', component: NetworkMapsComponent, canActivate: [AuthGuard], children: [
     { path: 'new', component: NetworkMapEditComponent},
     { path: ':id', component: NetworkMapDetailsComponent},
     { path: ':id/edit', component: NetworkMapEditComponent},
     { path: ':id/graph', component: GraphComponent}
   ] },
   { path: 'marketshare', component: MarketShareComponent },
+  { path: 'login', component: LoginComponent},
+  { path: 'register', component: RegisterComponent},
   { path: 'not-found', component: ErrorPageComponent, data: {message: 'Page not found!'}},
   { path: '**', redirectTo: '/not-found'}
 ]

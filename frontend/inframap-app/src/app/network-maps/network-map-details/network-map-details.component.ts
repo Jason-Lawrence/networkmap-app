@@ -20,7 +20,11 @@ export class NetworkMapDetailsComponent implements OnInit {
     this.route.params.subscribe(
       (params: Params) => {
         this.id = +params['id'];
-        this.networkMap = this.netmapService.getNetworkMap(this.id);
+        this.netmapService.getNetworkMap(this.id).subscribe(
+          (netmap: NetworkMap) => {
+            this.networkMap = netmap
+          }
+        );
       }
     );
   }

@@ -23,6 +23,8 @@ def create_netmap(user, **params):
     defaults = {
         'name': 'test map',
         'description': 'Test Map',
+        'is_public': True,
+        'is_editable': False
     }
     defaults.update(params)
 
@@ -35,7 +37,8 @@ class NetworkMapAPITests(TestCase):
     def setUp(self) -> None:
         self.client = APIClient()
         self.user = create_user(
-            username="test_user",
+            name="test_user",
+            email="testuser@test.com",
             password="testpass123"
         )
         self.client.force_authenticate(self.user)
@@ -64,7 +67,9 @@ class NetworkMapAPITests(TestCase):
     def test_create_netmap(self):
         payload = {
             'name': 'Test_1',
-            'description': 'test-1'
+            'description': 'test-1',
+            'is_public': True,
+            'is_editable': False
         }
         res = self.client.post(NETWORK_URL, payload)
 
@@ -102,8 +107,16 @@ class NetworkMapAPITests(TestCase):
             'name': 'test map',
             'description': "Test Map",
             'cloudpools':[
-                {'name': 'test_pool', 'region': 'test-1'},
-                {'name': 'fake_pool', 'region': 'fake-1'}
+                {
+                    'name': 'test_pool', 
+                    'region': 'test-1',
+                    'description': 'test description'
+                },
+                {
+                    'name': 'fake_pool', 
+                    'region': 'fake-1',
+                    'description': 'fake description'
+                }
             ]
         }
         res = self.client.post(NETWORK_URL, payload, format='json')

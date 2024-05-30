@@ -1,37 +1,39 @@
 import { EventEmitter, Injectable, OnInit } from '@angular/core';
 import { NetworkMap } from './network-map.model';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, exhaustMap, take } from 'rxjs';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NetworkMapsService {
-  private networkMapUrl = 'http://127.0.0.1:8000/api/netmap/netmap/'
-  private headers: HttpHeaders = new HttpHeaders()
-    .set('Access-Control-Allow-Origin', "http://localhost:8000/api/")
-    //.set('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT')
-    //.set('Access-Control-Allow-Headers','Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers')
 
-  network_maps: NetworkMap[] = [
-    {id: 1, name:"Test", description:"Test Network Map"}
-  ];
+  networkMaps: NetworkMap[] = [];
 
-  netmapSelected = new EventEmitter<NetworkMap>();
+  private networkMapUrl: string = 'http://127.0.0.1:8000/api/netmap/netmap/'
 
-  constructor(private http: HttpClient) { }
+  netmapSelected = new Subject<NetworkMap>();
 
-  getNetworkMap(id: number){
-    return this.network_maps[id]
-  }
-
-  retrieveNetworkMaps(): Observable<NetworkMap[]> {
-    return this.http.get<NetworkMap[]>(this.networkMapUrl)
-  }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   getNetworkMaps(): NetworkMap[] {
-    return this.network_maps.slice()
+    this.http.get<NetworkMap[]>(this.networkMapUrl).subscribe(
+      (netmaps: NetworkMap[]) => {
+        this.networkMaps = netmaps
+      }, error => {
+        console.log(error);
+        alert(error.message)
+      }
+    );
+    return this.networkMaps.slice();
   }
 
+  getNetworkMap(id: number): Observable<NetworkMap>{
+    return this.http.get<NetworkMap>(this.networkMapUrl + id)
+  }
 
+  createNetworkMap(netmap: NetworkMap) {
+    return this.http.post<NetworkMap>(this.networkMapUrl, netmap) 
+  }
 }

@@ -1,6 +1,8 @@
 """
 Views for the Network Map API.
 """
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 from rest_framework import (
     viewsets,
@@ -31,6 +33,8 @@ class NetworkMapViewSet(viewsets.ModelViewSet):
     """View for managing Network Maps APIs"""
     serializer_class = serializers.NetworkMapDetailSerializer
     queryset = models.NetworkMap.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def _params_to_ints(self, qs):
         """Convert list of strings to integers"""
@@ -87,8 +91,10 @@ class BaseNetworkMapAttrViewSet(mixins.UpdateModelMixin,
 
 class CloudPoolViewSet(viewsets.ModelViewSet):
     """"""
-    serializer_class = serializers.CloudPoolSerializer
+    serializer_class = serializers.CloudPoolDetailSerializer
     queryset = models.CloudPool.objects.all()
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
         """"""
@@ -96,5 +102,5 @@ class CloudPoolViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         """"""
-        serializer.save()
+        serializer.save(user=self.request.user)
         

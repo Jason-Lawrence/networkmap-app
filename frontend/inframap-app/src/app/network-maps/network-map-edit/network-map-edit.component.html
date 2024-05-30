@@ -1,1 +1,123 @@
-<h1>edit me</h1>
+<h1 *ngIf="editMode"; else newTitle>Editing Network Map {{ id }}</h1>
+<h1 #editTitle>Create a New Network Map</h1>
+<br>
+<form [formGroup]="networkMapForm" (ngSubmit)="onSave()" #f="ngForm">
+    <div id="netmap-data">
+        <div class="form-group">
+            <label for="netmap-name">Network Map Name</label>
+            <input 
+                type="text" 
+                id="netmap-name" 
+                class="form-control"
+                formControlName="name">
+        </div>
+        <br>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+                type="text" 
+                rows="3"
+                class="form-control" 
+                id="description"
+                formControlName="description"
+                ></textarea>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-xs-12">
+                <label for="cloudpool-select">Import Cloudpools</label>
+                <select multiple id="cloudpool-select" 
+                (change)="addCloudPool($event)"
+                #select1>
+                    <option value=""
+                    *ngFor="let pool of cloudpools;"
+                    [value]="pool.name"
+                    ></option>
+                </select>
+                <label for="cloudpools">Selected Cloudpools</label>
+                <select 
+                #select2
+                multiple 
+                (change)="removeCloudPool($event)"
+                id="cloudpools"
+                formControlName="cloudpools"></select>
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            <div class="btn-group" role="group" aria-label="permissions">
+                <input 
+                    type="checkbox" 
+                    class="btn-check" 
+                    id="is_public"
+                    (click)="toggleEditable(Editable)"
+                    formControlName="is_public">
+                <label class="btn btn-outline-primary" for="is_public">Public</label>
+               
+                <div [hidden]="hideEditable" #Editable>
+                    <input 
+                        type="checkbox"
+                        class="btn-check"
+                        id="is_editable"
+                        formControlName="is_editable">
+                    <label class="btn btn-outline-primary" for="is_editable">Editable by Others?</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-xs-12">
+            <button class="btn btn-primary" type="submit" [disabled]="!f.valid">Save</button>
+            <button class="btn btn-danger" type="button">Cancel</button>
+        </div>
+    </div>
+</form>
+
+<!--
+<form (ngSubmit)="onSubmit()" #formData="ngForm">
+    <div id="netmap-data" ngModelGroup="netmapData">
+        <div class="form-group">
+            <label for="netmap-name">Network Map Name</label>
+            <input 
+                type="text" 
+                id="netmap-name" 
+                class="form-control"
+                ngModel
+                name="netmap-name">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea 
+                type="text" 
+                rows="3"
+                class="form-control" 
+                id="description"
+                ngModel
+                name="description"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="btn-group" role="group" aria-label="permissions">
+                <input 
+                    type="checkbox" 
+                    class="btn-check" 
+                    id="is_public"
+                    autocomplete="off"
+                    ngModel
+                    name="is_public">
+                <label class="btn btn-outline-primary" for="is_public">Public</label>
+            
+                <input 
+                    type="checkbox"
+                    class="btn-check"
+                    id="is_editable"
+                    autocomplete="off"
+                    ngModel
+                    name="is_editable">
+                <label class="btn btn-outline-primary" for="is_editable">Editable by Others?</label>
+                
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form> -->
