@@ -17,16 +17,8 @@ export class NetworkMapsService {
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  getNetworkMaps(): NetworkMap[] {
-    this.http.get<NetworkMap[]>(this.networkMapUrl).subscribe(
-      (netmaps: NetworkMap[]) => {
-        this.networkMaps = netmaps
-      }, error => {
-        console.log(error);
-        alert(error.message)
-      }
-    );
-    return this.networkMaps.slice();
+  getNetworkMaps(): Observable<NetworkMap[]> {
+    return this.http.get<NetworkMap[]>(this.networkMapUrl)
   }
 
   getNetworkMap(id: number): Observable<NetworkMap>{

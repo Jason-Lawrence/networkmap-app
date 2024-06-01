@@ -8,7 +8,17 @@ export class NetworkMapResolverService implements Resolve<NetworkMap> {
     
     constructor(private networkMapService: NetworkMapsService) { }
 
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
        return this.networkMapService.getNetworkMap(route.params['id'])
+    }
+}
+
+@Injectable({providedIn: 'root'})
+export class NetworkMapsResolverService implements Resolve<NetworkMap[]> {
+
+    constructor(private networkMapService: NetworkMapsService) { }
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        return this.networkMapService.getNetworkMaps()
     }
 }
