@@ -76,4 +76,4 @@ class NetworkMapDetailSerializer(NetworkMapSerializer):
 class CloudPoolDetailSerializer(CloudPoolSerializer):
     
     class Meta(CloudPoolSerializer.Meta):
-        fields = CloudPoolSerializer.Meta.fields + ['is_base_model', 'is_public', 'is_editable']
+        fields = CloudPoolSerializer.Meta.fields

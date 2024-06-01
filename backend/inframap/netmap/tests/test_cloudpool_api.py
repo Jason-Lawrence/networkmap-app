@@ -35,7 +35,6 @@ class CloudPoolAPITests(TestCase):
             user=self.user,
             name="fake_pool", 
             region="fake-1",
-            is_public=True
         )
 
         res = self.client.get(CLOUDPOOL_URL)
@@ -52,9 +51,6 @@ class CloudPoolAPITests(TestCase):
             name="test_pool", 
             region="test-1", 
             description="This is a Test Network Map for testing purposes.",
-            is_base_model=False,
-            is_public=True,
-            is_editable=False
         )
         
         url = detail_url(pool.id)
@@ -69,9 +65,6 @@ class CloudPoolAPITests(TestCase):
             'name': 'test pool',
             'region': 'test-1',
             'description': 'This is a Test Pool for testing purposes.',
-            'is_base_model': False,
-            'is_public': True,
-            'is_editable': False
         }
         res = self.client.post(CLOUDPOOL_URL, payload)
         

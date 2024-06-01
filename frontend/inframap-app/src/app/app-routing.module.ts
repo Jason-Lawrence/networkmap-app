@@ -12,14 +12,27 @@ import { NetworkMapDetailsComponent } from "./network-maps/network-map-details/n
 import { LoginComponent } from "./auth/login/login.component";
 import { RegisterComponent } from "./auth/register/register.component";
 import { AuthGuard } from "./auth/auth.guard";
+import { NetworkMapResolverService } from "./network-maps/networkmaps-resolver.service";
 
 const appRoutes: Routes = [
   { path: '', component:  HomeComponent},
   { path: 'networkmaps', component: NetworkMapsComponent, canActivate: [AuthGuard], children: [
     { path: 'new', component: NetworkMapEditComponent},
-    { path: ':id', component: NetworkMapDetailsComponent},
-    { path: ':id/edit', component: NetworkMapEditComponent},
-    { path: ':id/graph', component: GraphComponent}
+    { 
+      path: ':id', 
+      component: NetworkMapDetailsComponent, 
+      resolve:[NetworkMapResolverService]
+    },
+    { 
+      path: ':id/edit', 
+      component: NetworkMapEditComponent, 
+      resolve:[NetworkMapResolverService]
+    },
+    { 
+      path: ':id/graph', 
+      component: GraphComponent,
+      resolve:[NetworkMapResolverService]
+    }
   ] },
   { path: 'marketshare', component: MarketShareComponent },
   { path: 'login', component: LoginComponent},

@@ -1,6 +1,27 @@
 from django.db import models
 from django.conf import settings
 
+
+class CloudPool(models.Model):
+    """
+    Model to use for CloudPool.
+    
+    :param name: The name of the Cloud Pool.
+    :type name: str.
+    :param region: The region Identifier for the Cloud Pool.
+    :type region: str.
+    """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    region = models.CharField(max_length=50)
+    description = models.CharField(max_length=255)
+    
+    # Devices will be linked through the device models' foreign keys
+
+    def __str__(self):
+        return self.name
+
+
 class Protocol(models.Model):
     """
     Model used for holding modes of communication a device can use.
@@ -38,7 +59,7 @@ class Device(models.Model):
     :param extra: Extra data about the device.
     :type extra: JSON
     """    
-    
+    cloudpool = models.ForeignKey(CloudPool, on_delete=models.CASCADE)
     device_type = models.CharField(max_length=100)
     hostname = models.CharField(max_length=100)
     in_band_ip = models.GenericIPAddressField()
@@ -47,6 +68,7 @@ class Device(models.Model):
     model = models.CharField(max_length=25)
     extra = models.JSONField(blank=True, null=True)
     protocols = models.ManyToManyField(Protocol)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.hostname
@@ -65,7 +87,7 @@ class OpenStackDevice(Device):
     """
     service = models.CharField(max_length=20, null=True, blank=True)
     availability_zone = models.CharField(max_length=30, null=True, blank=True)
-    cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='openstack_devices')
+    #cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='openstack_devices')
 
 
 class KubernetesDevice(Device):
@@ -75,7 +97,7 @@ class KubernetesDevice(Device):
     :param cloud_pool: The cloud pool the device belongs too.
     :type cloud_pool: :class: CloudPool
     """
-    cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='kubernetes_devices')
+    #cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='kubernetes_devices')
 
 
 class NetworkDevice(Device):
@@ -88,30 +110,15 @@ class NetworkDevice(Device):
     :type cloud_pool: :class: CloudPool
     """
     public_ip = models.GenericIPAddressField()
-    cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='network_devices')
+    #cloud_pool = models.ForeignKey('CloudPool', on_delete=models.CASCADE, related_name='networking_devices')
     
     
-class CloudPool(models.Model):
-    """
-    Model to use for CloudPool.
-    
-    :param name: The name of the Cloud Pool.
-    :type name: str.
-    :param region: The region Identifier for the Cloud Pool.
-    :type region: str.
-    """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    region = models.CharField(max_length=50)
-    description = models.CharField(max_length=255)
-    is_base_model = models.BooleanField(default=False)
-    is_public = models.BooleanField(default=False)
-    is_editable = models.BooleanField(default=False)
-    
-    # Devices will be linked through the device models' foreign keys
-
-    def __str__(self):
-        return self.name
+class AuthDevice(NetworkDevice):
+    entry_point = models.GenericIPAddressField()
+    private_pool = models.GenericIPAddressField()
+    auth_method = models.ForeignKey(Protocol, on_delete=models.CASCADE)
+    username = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
 
 
 class NetworkMap(models.Model):

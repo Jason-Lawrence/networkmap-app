@@ -12,14 +12,13 @@ import { NetworkMap } from '../network-map.model';
   styleUrl: './network-map-edit.component.css'
 })
 export class NetworkMapEditComponent implements OnInit{
-  id: number;
+  networkMap: NetworkMap;
   editMode: boolean = false;
   hideEditable: boolean = true;
   networkMapForm: FormGroup;
   cloudpools: Cloudpool[];
   @ViewChild('select1') select1: ElementRef
   @ViewChild('select2') select2: ElementRef
-  //@ViewChild('formData') netmapForm: NgForm;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -30,9 +29,7 @@ export class NetworkMapEditComponent implements OnInit{
   ngOnInit(): void {
     this.route.params.subscribe(
       (params: Params) => {
-        this.id = params['id'];
         this.editMode = params['id'] != null;
-        console.log(this.editMode)
         this.initForm();
       }
     );
@@ -45,25 +42,47 @@ export class NetworkMapEditComponent implements OnInit{
   }
 
   private initForm() {
-    let netmap = null;
     
     let netmapName = '';
+    let netmapDescription = '';
+    let cloudpools = [];
+    let isPublic = false;
+    let isEditable = false;
 
     if (this.editMode){
-      this.netmapService.getNetworkMap(this.id).subscribe(
+      this.netmapService.netmapSelected.subscribe(
         (networkMap: NetworkMap) => {
-          netmap = networkMap;    
-        });
-      netmapName = netmap.name
-    }
+          if(networkMap){
+            this.networkMap = networkMap;
+            netmapName = this.networkMap.name;
+            netmapDescription = this.networkMap.description;
+            cloudpools = this.networkMap.cloudpools;
+            isPublic = this.networkMap.is_public
+            isEditable = this.networkMap.is_editable;
 
-    this.networkMapForm = new FormGroup({
-      'name': new FormControl(netmapName, Validators.required),
-      'description': new FormControl(null, Validators.required),
-      'cloudpools': new FormControl([]),
-      'is_public': new FormControl(false),
-      'is_editable': new FormControl(false)
-    });
+            if (isPublic){
+              this.toggleEditable()
+            }
+
+            this.networkMapForm = new FormGroup({
+              'name': new FormControl(netmapName, Validators.required),
+              'description': new FormControl(netmapDescription, Validators.required),
+              'cloudpools': new FormControl(cloudpools),
+              'is_public': new FormControl(isPublic),
+              'is_editable': new FormControl(isEditable)
+            });
+          }
+        });
+
+    }else{
+      this.networkMapForm = new FormGroup({
+        'name': new FormControl(netmapName, Validators.required),
+        'description': new FormControl(netmapDescription, Validators.required),
+        'cloudpools': new FormControl(cloudpools),
+        'is_public': new FormControl(isPublic),
+        'is_editable': new FormControl(isEditable)
+      });
+    }
   }
 
   addCloudPool(event: any){
@@ -83,7 +102,7 @@ export class NetworkMapEditComponent implements OnInit{
     this.select2.nativeElement.removeChild(event.target.selectedOptions[0])
   }
 
-  toggleEditable(Editable: ElementRef){
+  toggleEditable(){
     this.hideEditable = !this.hideEditable;
   }
 

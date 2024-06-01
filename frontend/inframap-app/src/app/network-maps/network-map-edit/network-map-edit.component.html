@@ -1,5 +1,7 @@
-<h1 *ngIf="editMode"; else newTitle>Editing Network Map {{ id }}</h1>
-<h1 #editTitle>Create a New Network Map</h1>
+<h1 *ngIf="editMode; else newTitle">Editing Network Map {{ this.networkMap.id }}</h1>
+<ng-template #newTitle>
+    <h1>Create a New Network Map</h1>
+</ng-template>
 <br>
 <form [formGroup]="networkMapForm" (ngSubmit)="onSave()" #f="ngForm">
     <div id="netmap-data">
@@ -50,7 +52,7 @@
                     type="checkbox" 
                     class="btn-check" 
                     id="is_public"
-                    (click)="toggleEditable(Editable)"
+                    (click)="toggleEditable()"
                     formControlName="is_public">
                 <label class="btn btn-outline-primary" for="is_public">Public</label>
                
