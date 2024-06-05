@@ -110,18 +110,25 @@ export class NetworkMapEditComponent implements OnInit{
   // this.netmapForm.setValue({key: val, key: val})
 
   onSave(){
-    this.netmapService.createNetworkMap(<NetworkMap>this.networkMapForm.value).subscribe(
-      (netmap: NetworkMap) => {
-        console.log(netmap)
-      }
-    );
+    if (this.editMode){
+      this.netmapService.updateNetworkMap(this.networkMap.id, <NetworkMap>this.networkMapForm.value).subscribe(
+        (netmap: NetworkMap) => {
+          console.log('Updated: ' + netmap)
+        }
+      );
+    }else{
+      this.netmapService.createNetworkMap(<NetworkMap>this.networkMapForm.value).subscribe(
+        (netmap: NetworkMap) => {
+          console.log(netmap)
+        }
+      );
+    }
     this.router.navigate(['networkmaps'])
     //console.log(this.netmapForm.value.netmapData)
     //this.netmapForm.reset()
   }
 
-
-  
-
-
+  onCancel(){
+    this.router.navigate(['networkmaps'])
+  }
 }

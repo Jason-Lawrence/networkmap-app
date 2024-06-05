@@ -30,4 +30,14 @@ export class NetworkMapDetailsComponent implements OnInit{
     this.router.navigate(['edit'], {relativeTo: this.route})
   }
 
+  onDelete(){
+    this.netmapService.deleteNetworkMap(this.networkMap.id)
+      .subscribe(
+        resp => {
+          console.log(resp)
+        }
+      );
+    this.router.navigate(['networkmaps'])
+  }
+
 }

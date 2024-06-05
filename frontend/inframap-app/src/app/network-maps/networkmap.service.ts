@@ -26,6 +26,14 @@ export class NetworkMapsService {
   }
 
   createNetworkMap(netmap: NetworkMap) {
-    return this.http.post<NetworkMap>(this.networkMapUrl, netmap) 
+    return this.http.post<NetworkMap>(this.networkMapUrl, netmap); 
+  }
+
+  updateNetworkMap(netmap_id: number, netmap: NetworkMap) {
+    return this.http.put<NetworkMap>(`${this.networkMapUrl}${netmap_id}/`, netmap);
+  }
+
+  deleteNetworkMap(netmap_id: number){
+    return this.http.delete(`${this.networkMapUrl}${netmap_id}/`)
   }
 }

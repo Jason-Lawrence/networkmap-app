@@ -54,7 +54,7 @@ class NetworkMapSerializer(serializers.ModelSerializer):
         """Update a Network Map"""
         cloud_pools = validated_data.pop('cloudpools', None)
         if cloud_pools is not None:
-            instance.cloud_pools.clear()
+            instance.cloudpools.clear()
             self._get_or_create_cloud_pools(cloud_pools, instance)
 
         for attr, val in validated_data.items():
